@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Chatbot Admin</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    /* small admin page tweaks */
+    .admin-actions { display:flex; gap:8px; margin-bottom:12px; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding:8px; border-bottom:1px solid rgba(0,0,0,0.06); font-size:13px; text-align:left;}
+    th { background: rgba(0,0,0,0.03); }
+    .muted { color: #666; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title">Chatbot Admin</div>
+    <div class="controls">
+      <a href="/" target="_blank">Open Chat</a>
+    </div>
+  </div>
+
+  <div class="chat-container" style="max-width:1000px;">
+    <div class="admin-actions">
+      <button id="reloadBtn">Reload</button>
+      <button id="downloadCsv">Download CSV</button>
+      <button id="clearDb">Clear DB (DELETE ALL)</button>
+      <input id="searchBox" placeholder="Search message..." style="padding:6px;border-radius:6px;border:1px solid #ccc;">
+    </div>
+
+    <div id="tableWrap">
+      <table id="msgTable">
+        <thead><tr><th>ID</th><th>Role</th><th>Message</th><th>Timestamp</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="muted">Note: Export downloads all stored messages as chat_history.csv</div>
+  </div>
+
+<script>
+function loadHistory(q){
+  fetch('/history').then(r=>r.json()).then(data=>{
+    const rows = data.history || [];
+    const tbody = document.querySelector('#msgTable tbody');
+    tbody.innerHTML = '';
+    const filter = (q||'').toLowerCase();
+    rows.forEach(r=>{
+      if(filter && (String(r.id).indexOf(filter)===-1 && (r.role+ ' ' + r.message + ' ' + r.ts).toLowerCase().indexOf(filter)===-1)) return;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${r.id}</td><td>${r.role}</td><td>${escapeHtml(r.message)}</td><td>${r.ts}</td>`;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+function escapeHtml(s){
+  if(!s) return '';
+  return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+}
+
+document.getElementById('reloadBtn').addEventListener('click', ()=>loadHistory(document.getElementById('searchBox').value));
+document.getElementById('downloadCsv').addEventListener('click', ()=>window.location = '/export_csv');
+document.getElementById('clearDb').addEventListener('click', ()=>{
+  if(!confirm('Clear all messages? This cannot be undone on server.')) return;
+  fetch('/clear_db', {method:'POST'}).then(r=>r.json()).then(res=>{
+    if(res.status==='ok'){ alert('Cleared'); loadHistory(); } else alert('Error: '+(res.error||'unknown'));
+  });
+});
+document.getElementById('searchBox').addEventListener('input', (e)=>loadHistory(e.target.value));
+
+loadHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+:root {
+  --bg: #e8e8e8;
+  --card: #ffffff;
+  --user-bg: #dfefff;
+  --bot-bg: #eaf7ea;
+  --text: #111;
+  --muted: #666;
+}
+
+/* Dark mode */
+body.dark {
+  --bg: #121212;
+  --card: #1e1e1e;
+  --user-bg: #223344;
+  --bot-bg: #1f3a1f;
+  --text: #eee;
+  --muted: #aaa;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* top bar */
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 16px;
+  background: var(--card);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+.title { font-weight:700; }
+.controls { display:flex; gap:8px; align-items:center; }
+.controls button, .controls a {
+  margin-left:8px;
+  padding:6px 8px;
+  border-radius:6px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:transparent;
+  cursor:pointer;
+  text-decoration:none;
+  color:inherit;
+}
+
+/* chat area */
+.chat-container {
+  width: 95%;
+  max-width: 800px;
+  margin: 16px auto;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.college-buttons { display:flex; gap:6px; margin:8px 0; flex-wrap:wrap; }
+.college-buttons button { padding:8px 10px; border-radius:6px; cursor:pointer; border:1px solid rgba(0,0,0,0.06); background:transparent; }
+
+/* chat box */
+#chat-box {
+  min-height: 320px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 14px;
+  background: rgba(0,0,0,0.02);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/* message bubbles */
+.message { display:flex; margin:8px 0; }
+.message.user { justify-content:flex-end; }
+.message.bot { justify-content:flex-start; }
+
+.bubble {
+  max-width: 78%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  position: relative;
+  display: inline-block;
+}
+
+.message.user .bubble {
+  background: var(--user-bg);
+  border-bottom-right-radius: 4px;
+  text-align: right;
+}
+
+.message.bot .bubble {
+  background: var(--bot-bg);
+  border-bottom-left-radius: 4px;
+  text-align: left;
+}
+
+.content {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.ts {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* input row */
+.input-row {
+  display:flex;
+  gap:8px;
+}
+
+.input-row input[type="text"] {
+  flex:1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: transparent;
+  color: var(--text);
+}
+
+.input-row button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #1e88e5;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* admin table tweaks (used by admin.html) */
+table { width:100%; border-collapse: collapse; }
+th, td { padding:8px; border-bottom:1px solid rgba(0,0,0,0.06); font-size:13px; text-align:left;}
+th { background: rgba(0,0,0,0.03); }
+
+/* small screens */
+@media (max-width:420px) {
+  .bubble { max-width: 92%; }
+  .chat-container { padding: 10px; }
+}
